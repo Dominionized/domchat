@@ -1,6 +1,6 @@
 package ca.csf.domchat.server;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,6 +22,8 @@ public class Server {
     private List<Client> clients;
     int nbrClient;
 
+    private File blacklist;
+
     private boolean isAlive;
 
     //TODO domdraw ?
@@ -34,23 +36,35 @@ public class Server {
         System.out.print("Choisissez le port de démarrage serveur (Defaut 4444) : ");
         Scanner scanner = new Scanner(System.in);
         String changePort = scanner.nextLine();
-        if(!changePort.isEmpty()){
-           port = Integer.parseInt(changePort);
+        if (!changePort.isEmpty()) {
+            port = Integer.parseInt(changePort);
         }
         new Server();
     }
 
-    public Server() throws IOException{
+    public Server() throws IOException {
         clientReaderThreads = new ArrayList<ClientReaderThread>();
         clientWriterThreads = new ArrayList<ClientWriterThread>();
         clients = new ArrayList<Client>();
+
+        blacklist = new File("blacklist.txt");
 
         printWelcome(port);
         ServerSocket serverSocket = new ServerSocket(port);
         nbrClient = 0;
         isAlive = true;
-        while(isAlive){
+        while (isAlive) {
             Socket socket = serverSocket.accept();
+
+            //Check if blacklisted
+
+            if (!checkIfBlacklisted(socket.getInetAddress().toString(), this.blacklist) == false) {
+                PrintWriter pw = new PrintWriter(socket.getOutputStream());
+                pw.println("/blacklisted;");
+                pw.flush();
+                continue;
+            }
+
 
             int clientId = nbrClient++;
             Client client = new Client(clientId);
@@ -61,16 +75,16 @@ public class Server {
             Thread readerThread = new Thread(clientReaderThread);
             readerThread.start();
 
-            ClientWriterThread clientWriterThread = new ClientWriterThread(socket);
+            ClientWriterThread clientWriterThread = new ClientWriterThread(socket, client);
 
             Thread writerThread = new Thread(clientWriterThread);
             writerThread.start();
 
-            synchronized(clientReaderThread){
+            synchronized (clientReaderThread) {
                 clientReaderThreads.add(clientReaderThread);
             }
 
-            synchronized (clientWriterThread){
+            synchronized (clientWriterThread) {
                 clientWriterThreads.add(clientWriterThread);
             }
 
@@ -82,59 +96,74 @@ public class Server {
         logger.info("Server has stopped");
     }
 
-    static private void printWelcome(Integer port)
-    {
+    static private void printWelcome(Integer port) {
         String info = "\r\nDomDraw Server : Par Dominique Bégin et Dominique Septembre\r\n";
         try {
             info += "Démarre sur : " + InetAddress.getLocalHost() + ":" + port.toString() + "\r\n";
-        } catch(UnknownHostException e){
+        } catch (UnknownHostException e) {
             logger.log(Level.WARNING, e.toString());
         }
         logger.log(Level.INFO, info + "----------");
     }
 
-    public void changeUsername(String username, Client client){
+    public void changeUsername(String username, Client client) {
         int clientId = client.getId();
         boolean exists = false;
-        for (Client checkClient : clients){
-            if(checkClient.getUsername().equalsIgnoreCase(username)){
+        for (Client checkClient : clients) {
+            if (checkClient.getUsername().equalsIgnoreCase(username)) {
                 exists = true;
             }
         }
 
         ClientWriterThread clientWriter = clientWriterThreads.get(clientId);
 
-        synchronized (clientWriter){
-            if(exists) {
+        synchronized (clientWriter) {
+            if (exists) {
                 logger.info("SERVER:Username " + username + " already exists ! User : " + client.getId());
                 clientWriter.sendMessage("/username;error");
                 clientWriter.sendMessage("SERVER:Username " + username + " already exists !");
             } else {
                 clientWriter.sendMessage("/username;ok");
-                logger.info("SERVER:Username change for : " + username + " : user "+ client.getId());
-                clientWriter.sendMessage("SERVER:Username change for : " + username + " : user "+ client.getId());
+                logger.info("SERVER:Username change for : " + username + " : user " + client.getId());
+                clientWriter.sendMessage("SERVER:Username change for : " + username + " : user " + client.getId());
                 client.setUsername(username);
             }
         }
     }
 
-    public void onMessage(String readLine){
+    public void onMessage(String readLine) {
         logger.info(readLine);
-        synchronized (clientWriterThreads){
-            for(ClientWriterThread clientWriterThread : clientWriterThreads){
+        synchronized (clientWriterThreads) {
+            for (ClientWriterThread clientWriterThread : clientWriterThreads) {
                 clientWriterThread.sendMessage(readLine);
             }
         }
     }
 
-    public void removeClient(Client client){
+    public void removeClient(Client client) {
         logger.info(client.getUsername() + " s'est déconnecté !");
         onMessage("SERVER:" + client.getUsername() + " s'est déconnecté !");
         clients.remove(client);
         nbrClient--;
     }
 
-    public void stop(){
+    public void stop() {
         isAlive = false;
+    }
+
+    private boolean checkIfBlacklisted(String address, File blacklistFile) {
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new FileReader(blacklist));
+
+            while ((line = br.readLine()) != null) {
+                if (line == address){
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

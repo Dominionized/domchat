@@ -9,11 +9,13 @@ import java.util.List;
 public class ClientWriterThread implements Runnable{
     private Socket socket;
     private boolean isAlive;
+    private Client client;
 
     private List<String> messageList;
 
-    public ClientWriterThread(Socket socket) {
+    public ClientWriterThread(Socket socket, Client client) {
         this.socket = socket;
+        this.client = client;
         this.messageList = new ArrayList<String>();
     }
 
