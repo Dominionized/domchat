@@ -99,9 +99,11 @@ public class Server {
         for (Client checkClient : clients){
             if(checkClient.getUsername().equalsIgnoreCase(username)){
                 exists = true;
-            } else {
-                client.setUsername(username);
             }
+        }
+
+        if(!exists) {
+            client.setUsername(username);
         }
 
         ClientWriterThread clientWriter = clientWriterThreads.get(clientId);
