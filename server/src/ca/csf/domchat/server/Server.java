@@ -98,6 +98,8 @@ public class Server {
         for (Client checkClient : clients){
             if(checkClient.getUsername().equalsIgnoreCase(username)){
                 exists = true;
+            } else {
+                client.setUsername(username);
             }
         }
 
