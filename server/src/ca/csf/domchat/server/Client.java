@@ -1,4 +1,4 @@
-package ca.csf.ClientServer.Server;
+package ca.csf.domchat.server;
 
 public class Client {
 

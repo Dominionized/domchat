@@ -1,6 +1,4 @@
-package ca.csf.ClientServer.Server;
-
-import com.sun.deploy.util.SessionState;
+package ca.csf.domchat.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
