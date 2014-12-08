@@ -102,21 +102,18 @@ public class Server {
             }
         }
 
-        if(!exists) {
-            client.setUsername(username);
-        }
-
         ClientWriterThread clientWriter = clientWriterThreads.get(clientId);
 
         synchronized (clientWriter){
             if(exists) {
                 logger.info("SERVER:Username " + username + " already exists ! User : " + client.getId());
-                clientWriter.sendMessage("SERVER:Username " + username + " already exists !");
                 clientWriter.sendMessage("/username;error");
+                clientWriter.sendMessage("SERVER:Username " + username + " already exists !");
             } else {
+                clientWriter.sendMessage("/username;ok");
                 logger.info("SERVER:Username change for : " + username + " : user "+ client.getId());
                 clientWriter.sendMessage("SERVER:Username change for : " + username + " : user "+ client.getId());
-                clientWriter.sendMessage("/username;ok");
+                client.setUsername(username);
             }
         }
     }
