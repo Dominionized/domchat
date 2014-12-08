@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2014-12-08T11:53:32</date>
-  <millis>1418057612580</millis>
+  <date>2014-12-08T12:23:44</date>
+  <millis>1418059424301</millis>
   <sequence>0</sequence>
   <logger>ca.csf.domdraw.server</logger>
   <level>INFO</level>
@@ -15,3 +15,103 @@ DomDraw Server : Par Dominique Bégin et Dominique Septembre
 Démarre sur : archdoge/127.0.0.1:4444
 ----------</message>
 </record>
+<record>
+  <date>2014-12-08T12:23:59</date>
+  <millis>1418059439523</millis>
+  <sequence>1</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Un client s'est connecté : 0</message>
+</record>
+<record>
+  <date>2014-12-08T12:24:01</date>
+  <millis>1418059441771</millis>
+  <sequence>2</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>changeUsername</method>
+  <thread>11</thread>
+  <message>SERVER:Username change for : dominique : user 0</message>
+</record>
+<record>
+  <date>2014-12-08T12:24:05</date>
+  <millis>1418059445443</millis>
+  <sequence>3</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>onMessage</method>
+  <thread>11</thread>
+  <message>0:hello</message>
+</record>
+<record>
+  <date>2014-12-08T12:24:24</date>
+  <millis>1418059464343</millis>
+  <sequence>4</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Un client s'est connecté : 1</message>
+</record>
+<record>
+  <date>2014-12-08T12:27:11</date>
+  <millis>1418059631046</millis>
+  <sequence>5</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>onMessage</method>
+  <thread>13</thread>
+  <message>1:����������������</message>
+</record>
+<record>
+  <date>2014-12-08T12:27:11</date>
+  <millis>1418059631219</millis>
+  <sequence>6</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>removeClient</method>
+  <thread>13</thread>
+  <message>1 s'est déconnecté !</message>
+</record>
+<record>
+  <date>2014-12-08T12:27:11</date>
+  <millis>1418059631224</millis>
+  <sequence>7</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>onMessage</method>
+  <thread>13</thread>
+  <message>SERVER:1 s'est déconnecté !</message>
+</record>
+<record>
+  <date>2014-12-08T12:30:54</date>
+  <millis>1418059854933</millis>
+  <sequence>8</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>removeClient</method>
+  <thread>11</thread>
+  <message>0 s'est déconnecté !</message>
+</record>
+<record>
+  <date>2014-12-08T12:30:54</date>
+  <millis>1418059854934</millis>
+  <sequence>9</sequence>
+  <logger>ca.csf.domdraw.server</logger>
+  <level>INFO</level>
+  <class>ca.csf.domchat.server.Server</class>
+  <method>onMessage</method>
+  <thread>11</thread>
+  <message>SERVER:0 s'est déconnecté !</message>
+</record>
+</log>

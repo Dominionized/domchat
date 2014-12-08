@@ -39,7 +39,6 @@ public class Client {
             socket = new Socket(address, port);
             output = new PrintWriter(socket.getOutputStream());
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            System.out.println("Connected to " + address + ":" + Integer.toString(port) + " as " + username);
 
             do {
 
@@ -53,23 +52,23 @@ public class Client {
                 output.println("/username;" + username + ";");
                 output.flush();
 
-                // TODO change error string
-                if (input.readLine().startsWith("/usernameerror")){
+                if (input.readLine().startsWith("/username;error")){
                     System.out.println("Username already in use");
                     continue;
                 }
-                break;
+                else if (input.readLine().startsWith("/username;ok")){
+                    break;
+                }
 
             } while (true);
 
+            System.out.println("Connected to " + address + ":" + Integer.toString(port) + " as " + username);
 
             Thread imThread = new IncomingMessagesThread(socket, this);
             imThread.start();
 
             while (true){
-                System.out.println("Entrez un message");
-                String shit = scanner.nextLine();
-                output.println(shit);
+                output.println(scanner.nextLine());
                 output.flush();
             }
 

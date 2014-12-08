@@ -24,13 +24,14 @@ public class Server {
 
     private boolean isAlive;
 
+    //TODO domdraw ?
     protected static Logger logger = Logger.getLogger("ca.csf.domdraw.server");
 
     public static void main(String[] args) throws IOException {
         Handler fh = new FileHandler("server.log", false);
         logger.addHandler(fh);
 
-        System.out.print("Choisissez le port de démmarage serveur (Defaut 4444) : ");
+        System.out.print("Choisissez le port de démarrage serveur (Defaut 4444) : ");
         Scanner scanner = new Scanner(System.in);
         String changePort = scanner.nextLine();
         if(!changePort.isEmpty()){
