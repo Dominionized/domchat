@@ -24,7 +24,7 @@ public class Client {
 
     }
 
-    public Client(){
+    public Client() {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -45,18 +45,20 @@ public class Client {
                 System.out.println("Choose a username (cannot contain ; or :)");
                 username = scanner.nextLine();
 
-                if (username.contains(";") || username.contains(":")){
+                if (username.contains(";") || username.contains(":")) {
                     continue;
                 }
 
                 output.println("/username;" + username + ";");
                 output.flush();
 
-                if (input.readLine().startsWith("/username;error")){
+
+                String line = input.readLine();
+
+                if (line.startsWith("/username;error")) {
                     System.out.println("Username already in use");
                     continue;
-                }
-                else if (input.readLine().startsWith("/username;ok")){
+                } else if (line.startsWith("/username;ok")) {
                     break;
                 }
 
@@ -67,7 +69,7 @@ public class Client {
             Thread imThread = new IncomingMessagesThread(socket, this);
             imThread.start();
 
-            while (true){
+            while (true) {
                 output.println(scanner.nextLine());
                 output.flush();
             }
@@ -78,8 +80,7 @@ public class Client {
             System.out.println("Unknown host");
         } catch (IOException e) {
             System.out.println("Cannot connect");
-        }
-        finally {
+        } finally {
             try {
                 socket.close();
             } catch (IOException e) {
@@ -88,14 +89,14 @@ public class Client {
         }
     }
 
-    public void onReadLine(String line){
+    public void onReadLine(String line) {
 
         // EXEMPLE
         // dseptembre:Ceci est mon message
 
-       if (line.startsWith("/")){
-           String command = line.substring(line.charAt(1), line.indexOf(";"));
-            switch(command){
+        if (line.startsWith("/")) {
+            String command = line.substring(line.charAt(1), line.indexOf(";"));
+            switch (command) {
             }
         }
 

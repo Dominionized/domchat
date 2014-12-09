@@ -19,6 +19,11 @@ public class Server {
 
     private List<ClientReaderThread> clientReaderThreads;
     private List<ClientWriterThread> clientWriterThreads;
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
     private List<Client> clients;
     int nbrClient;
 
@@ -68,7 +73,7 @@ public class Server {
 
 
             int clientId = nbrClient++;
-            Client client = new Client(clientId);
+            Client client = new Client(clientId, socket);
             clients.add(client);
 
             ClientReaderThread clientReaderThread = new ClientReaderThread(socket, this, client);
@@ -166,5 +171,19 @@ public class Server {
             System.out.println("Error while accessing/parsing blacklist file");
         }
         return false;
+    }
+
+    public void blacklist(Client client){
+        try {
+            FileWriter fw = new FileWriter(blacklist, true);
+            fw.write(client.getSocket().getInetAddress().toString());
+            fw.flush();
+            fw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

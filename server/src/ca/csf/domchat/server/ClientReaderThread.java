@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.logging.Level;
 
 public class ClientReaderThread implements Runnable {
     private Socket socket;
@@ -39,15 +40,29 @@ public class ClientReaderThread implements Runnable {
         }
     }
 
-    private void parseCommand(String commandsToParse){
-        if(commandsToParse.charAt(0) == '/'){
+    private void parseCommand(String commandsToParse) {
+        if (commandsToParse.charAt(0) == '/') {
             String[] commands = commandsToParse.split(";");
-            if(commands[0].equalsIgnoreCase("/username")) {
+            if (commands[0].equalsIgnoreCase("/username")) {
                 server.changeUsername(commands[1], client);
-            } else if(commands[0].equalsIgnoreCase("/quit")){
+            } else if (commands[0].equalsIgnoreCase("/quit")) {
                 stop();
+            } else if (commands[0].equalsIgnoreCase("/blacklist")) {
+                for (Client client : server.getClients()) {
+                    if (client.getUsername().equalsIgnoreCase(commands[1])) {
+                        server.blacklist(client);
+                        server.onMessage("SERVER:Blacklisted IP" + client.getSocket().getInetAddress().toString());
+                        server.logger.log(Level.WARNING, "Blacklisted IP " + client.getSocket().getInetAddress().toString());
+                        try {
+                            client.getSocket().close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         } else {
+            server.onMessage(client.getUsername() + ":" + commandsToParse);
             server.onMessage(client.getUsername() + ":" + commandsToParse);
         }
     }
