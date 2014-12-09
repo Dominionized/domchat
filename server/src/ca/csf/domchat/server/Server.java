@@ -58,9 +58,10 @@ public class Server {
 
             //Check if blacklisted
 
-            if (!checkIfBlacklisted(socket.getInetAddress().toString(), this.blacklist) == false) {
+            if (isIPBlacklisted(socket.getInetAddress().toString(), this.blacklist)) {
                 PrintWriter pw = new PrintWriter(socket.getOutputStream());
                 pw.println("/blacklisted;");
+                logger.log(Level.WARNING, "L'IP " + socket.getInetAddress().toString() + " a essayé de se connecter mais était blacklistée.");
                 pw.flush();
                 continue;
             }
@@ -151,19 +152,19 @@ public class Server {
         isAlive = false;
     }
 
-    private boolean checkIfBlacklisted(String address, File blacklistFile) {
+    private boolean isIPBlacklisted(String address, File blacklistFile) {
         try {
             String line;
-            BufferedReader br = new BufferedReader(new FileReader(blacklist));
+            BufferedReader br = new BufferedReader(new FileReader(blacklistFile));
 
             while ((line = br.readLine()) != null) {
-                if (line == address){
-                    return false;
+                if (line.equals(address)){
+                    return true;
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error while accessing/parsing blacklist file");
         }
-        return true;
+        return false;
     }
 }
