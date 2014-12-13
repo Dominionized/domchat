@@ -63,7 +63,6 @@ public class ClientReaderThread implements Runnable {
             }
         } else {
             server.onMessage(client.getUsername() + ":" + commandsToParse);
-            server.onMessage(client.getUsername() + ":" + commandsToParse);
         }
     }
 
